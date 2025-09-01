@@ -34,21 +34,52 @@
 	 (id property column : dto와 table 맵핑, usertbl 테이블의 기본기 세팅)
 	 (result ~ : 나머지 필드 세팅)
 	 associtaion 묶어줄 테이블 관련해서 적어주는 란 property:dto의 멤버변수로 받은 거
-	 id property column 으로 나머지 필드로 매핑해주기 -->
+	 id property column 으로 기본키 나머지 필드는 result로 매핑해주기 -->
 	<resultMap type="com.mycompany.mybatis.dto.UserDto" id="userWithUserInfo">
 		<id property="userid" column="userid"/>
 		<result property="username" column="username"/>
-			<association property="userInfo" javaType="com.mycompany.mybatis.dto.UserInfoDto">
-				<id property="userid" column="userid"/>
-				<id property="useraddress" column="useraddress"/>
-				<id property="useremail" column="useremail"/>
-			</association>
+		<association property="userInfo" javaType="com.mycompany.mybatis.dto.UserInfoDto">
+			<id property="userid" column="userid"/>
+			<result property="useraddress" column="useraddress"/>
+			<result property="useremail" column="useremail"/>
+		</association>
 	</resultMap>
 	<select id="UserInfoMapDao" resultMap="userWithUserInfo">
-		SELECT u.userid, u.username, ui.useraddress, ui.userphone FROM usertbl u
+		SELECT u.userid, u.username, ui.useraddress, ui.userphone
+		FROM usertbl u
 		INNER JOIN userinfotbl ui
 		ON u.userid = ui.userid
 		WHERE u.userid = #{param1 };
 	</select>
+	
+	
+	<!-- 특정 유저의 주문 목록 가져오기 (1:n 관계 매핑) -->
+	<resultMap type="com.mycompany.mybatis.dto.UserDto" id="userWithOrder">
+		<id property="userid" column="userid"/>
+		<result property="username" column="username"/>
+		<!-- order 매핑 (리스트로 들어왔기 때문에 collection 사용)
+		기본키는 id, 나머지는 result로 받아주기 -->
+		<collection property="orderDtos" ofType="com.mycompany.mybatis.dto.OrderDto">
+			<id property="orderid" column="orderid"/>
+			<result property="ordername" column="ordername"/>
+			<result property="userid" column="userid"/>
+		</collection>
+	</resultMap>
+	<select id="userOrderListDao" resultMap="userWithOrder">
+		SELECT u.userid, u.username, o.orderid, o.ordername 
+		FROM usertbl u
+		INNER JOIN ordertbl o
+		ON u.userid = o.userid
+		WHERE u.userid = #{param1 }
+	</select>
+	
+	<!-- 모든 유저의 모든 주문 목록 -->
+	<select id="allUserOrderListDao" resultMap="userWithOrder">
+		SELECT u.userid, u.username, o.orderid, o.ordername 
+		FROM usertbl u
+		INNER JOIN ordertbl o
+		ON u.userid = o.userid
+	</select>
+	
 
 </mapper>    

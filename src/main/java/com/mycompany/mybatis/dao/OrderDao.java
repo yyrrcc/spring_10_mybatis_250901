@@ -15,4 +15,7 @@ public interface OrderDao {
 	
 	public UserIdInfoDto userInfoDao(String userid); // 특정 유저의 세부정보 가져오기 (새롭게 dto 만듬) -> 비효율적 비추
 	public UserDto UserInfoMapDao(String userid); // userInfoDao를 스프링 프레임워크 형식으로! -> 추천
+	
+	public UserDto userOrderListDao(String userid); // 특정 유저의 주문 목록 가져오기(스프링 프레임워크 형식)	
+	public List<UserDto> allUserOrderListDao(); // 모든 유저의 모든 주문 목록 가져오기
 }
