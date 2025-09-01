@@ -13,6 +13,42 @@
 	<!-- 모든 회원 리스트 가져오기 -->	
 	<select id="userListDao" resultType="com.mycompany.mybatis.dto.UserDto">
 		SELECT * FROM usertbl
-	</select>	
+	</select>
+	
+	<!-- 특정 아이디 유저 가져오기 -->	
+	<select id="UserSearchDao" resultType="com.mycompany.mybatis.dto.UserDto">
+		SELECT * FROM usertbl WHERE userid = #{param1 }
+	</select>			
+	
+	
+	<!-- 특정 아이디 유저 세부 정보 가져오기 (새로운 dto 생성해서 -> 비추) -->	
+	<select id="userInfoDao" resultType="com.mycompany.mybatis.dto.UserIdInfoDto">
+		SELECT u.userid, u.username, ui.useraddress, ui.userphone FROM usertbl u
+		INNER JOIN userinfotbl ui
+		ON u.userid = ui.userid
+		WHERE u.userid = #{param1 };
+	</select>
+	
+	<!-- 특정 아이디 유저 세부 정보 가져오기 (스프링st) -->	
+	<!-- user와 userinfo 1:1 관계 매핑 (type:기존테이블 왼쪽테이블) (id:관례with)
+	 (id property column : dto와 table 맵핑, usertbl 테이블의 기본기 세팅)
+	 (result ~ : 나머지 필드 세팅)
+	 associtaion 묶어줄 테이블 관련해서 적어주는 란 property:dto의 멤버변수로 받은 거
+	 id property column 으로 나머지 필드로 매핑해주기 -->
+	<resultMap type="com.mycompany.mybatis.dto.UserDto" id="userWithUserInfo">
+		<id property="userid" column="userid"/>
+		<result property="username" column="username"/>
+			<association property="userInfo" javaType="com.mycompany.mybatis.dto.UserInfoDto">
+				<id property="userid" column="userid"/>
+				<id property="useraddress" column="useraddress"/>
+				<id property="useremail" column="useremail"/>
+			</association>
+	</resultMap>
+	<select id="UserInfoMapDao" resultMap="userWithUserInfo">
+		SELECT u.userid, u.username, ui.useraddress, ui.userphone FROM usertbl u
+		INNER JOIN userinfotbl ui
+		ON u.userid = ui.userid
+		WHERE u.userid = #{param1 };
+	</select>
 
 </mapper>    

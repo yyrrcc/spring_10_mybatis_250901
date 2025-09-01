@@ -31,4 +31,25 @@ public class JoinController {
 		return "orderlist";
 	}
 	
+	@RequestMapping (value = "/usersearch")
+	public String usersearch(HttpServletRequest request, Model model) {
+		OrderDao orderDao = sqlSession.getMapper(OrderDao.class);
+		model.addAttribute("user", orderDao.UserSearchDao("kim"));
+		return "usersearch";
+	}
+	
+	@RequestMapping (value = "/userinfo")
+	public String userinfo(HttpServletRequest request, Model model) {
+		OrderDao orderDao = sqlSession.getMapper(OrderDao.class);
+		model.addAttribute("userinfo", orderDao.userInfoDao("kim"));
+		return "userinfo";
+	}
+	
+	@RequestMapping (value = "/userinfo2")
+	public String userinfo2(HttpServletRequest request, Model model) {
+		OrderDao orderDao = sqlSession.getMapper(OrderDao.class);
+		model.addAttribute("userDto", orderDao.UserInfoMapDao("kim"));
+		return "userinfo2";
+	}
+	
 }

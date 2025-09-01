@@ -1,19 +1,16 @@
 package com.mycompany.mybatis.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto {
-	
+
+public class UserIdInfoDto {
 	private String userid; // 기본키
 	private String username;
-	
-	private UserInfoDto userInfo; // 유저의 세부 정보를 멤버로 저장 (1:1 관계)
-
+	private String useraddress;
+	private String userphone;
 }
